@@ -1,0 +1,133 @@
+# EDA
+
+
+BUILDING A DATAFRAME
+As a firtst step of ECG modeling, we take separate fildes of 48 patioents and put them into one datsframe
+
+
+
+
+
+
+!pip install wfdb
+import pandas as pd
+import numpy as np
+import wfdb
+import matplotlib.pyplot as plt
+
+labels = np.arange(100, 235)
+records = list(map(str,labels))
+records = ['100', '101', '102', '103', '104', '105', '106', '107', '108', '109', '111', '112', '113', '114', '115', '116', '117', '118', '119', '121', '122', '123', '124', '200', '201', '202', '203', '205', '207', '208', '209', '210', '212', '213', '214', '215', '217', '219', '220', '221', '222', '223', '228', '230', '231', '232', '233', '234']
+
+frames = []
+
+for i in records:
+  image = wfdb.rdrecord(i, pb_dir='mitdb', channels=[0])
+  signals_array, fields_dictionary = wfdb.rdsamp(i, pb_dir='mitdb', sampfrom=0, sampto=650000, channels=[0])
+  x = pd.DataFrame(signals_array)
+  frames.append(x)
+
+#sampfrom=0, sampto=200,
+result = pd.concat(frames, axis=1)
+result.columns = records 
+
+print(result.shape)
+
+result_T = result.T
+print(result_T.head())
+
+stat = result_T.describe()
+stat
+
+plt.plot(result.iloc[:200, :])
+plt.show()
+
+type(stat)
+
+plt.boxplot(stat.iloc[1:,:])
+rows_my_order = ['mean', 'std', 'min', '25%', '50%', '75%', 'max']
+plt.xticks([1, 2, 3, 4, 5, 6, 7], rows_my_order)
+
+
+
+#records = ['100', '101', '102', '103', '104', '105', '106', '107', '108', '109', '111', '112', '113', '114', '115', '116', '117', '118', '119', '121', '122', '123', '124', '200', '201', '202', '203', '205', '207', '208', '209', '210', '212', '213', '214', '215', '217', '219', '220', '221', '222', '223', '228', '230', '231', '232', '233', '234']
+
+frames = []
+
+for i in records:
+  image = wfdb.rdrecord(i, pb_dir='mitdb',  sampfrom=0, sampto=50, channels=[0])
+  annotation = wfdb.rdann(i, 'atr',  sampfrom=0, sampto=50, pb_dir='mitdb')
+  wfdb.plot_wfdb(record=image, annotation=annotation,
+               title='Sample Annotation',
+               time_units='seconds')
+  plt.show()
+
+type(annotation)
+
+ wfdb.io.show_ann_classes()
+
+
+ wfdb.io.show_ann_labels()
+
+#DRAFT
+# Read an annotation as an Annotation object
+annotation = wfdb.rdann('100', 'atr', pb_dir='mitdb')
+annotation
+
+#DRAFT
+ann1 = wfdb.Annotation(annotation, extension='atr',
+                           sample=[10,20,400] )
+ann1
+
+ann = wfdb.rdann('100', 'atr', pb_dir='mitdb', sampto=300000)
+ann
+
+# Read an annotation as an Annotation object
+annotation = wfdb.rdann('b001', 'atr', pb_dir='cebsdb')
+# Write a copy of the annotation file
+wfdb.wrann('b001', 'cpy', annotation.sample, annotation.symbol)
+annotation
+
+ann1 = wfdb.Annotation(record_name='rec1', extension='atr',
+                           sample=[10,20,400], symbol=['N','N','['],
+                           aux_note=[None, None, 'Serious Vfib'])
+ann1
+
+import time
+import binascii
+import csv
+import serial
+
+
+
+with open('100.dat') as binary_file:
+    for num in range(1,10):
+        data = binary_file.readline()
+        print(data)
+
+frames = []
+
+for i in records:
+  image = wfdb.rdrecord(i, pb_dir='mitdb', channels=[0])
+  signals_array, fields_dictionary = wfdb.rdsamp(i, pb_dir='mitdb', sampfrom=0, sampto=1000, channels=[0])
+  x = pd.DataFrame(signals_array)
+  frames.append(x)
+
+#sampfrom=0, sampto=200,
+result = pd.concat(frames, axis=1)
+result.columns = records 
+
+
+dat = wfdb.rdann('100', 'dat', sampto = 500, pb_dir='mitdb')
+print(dat)
+
+
+
+
+#Simple Models Exploration
+
+
+
+# CNN - Basic Model
+
+# CNN - Tuning Parameter
